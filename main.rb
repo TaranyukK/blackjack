@@ -43,7 +43,7 @@ class Game
     when 3
       showdown
     else
-      pust 'Invalid argument!'
+      puts   'Invalid argument!'
       player_turn
     end
   end

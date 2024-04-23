@@ -12,15 +12,18 @@ class User
   def take_card(deck)
     card = deck.take_card
     hand << card
-    self.score += if card[:card].tr('♠♣♦♥', '') == 'A'
-                    self.score + 11 < 21 ? 11 : 1
-                  else
-                    card[:value]
-                  end
+    self.score += card[:value]
+    check_score
   end
 
   def clear_hand
     self.hand = []
     self.score = 0
+  end
+
+  def check_score
+    hand.each do |card|
+      self.score -= 10 if card[:card].tr('♠♣♦♥', '') == 'A' && self.score > 21
+    end
   end
 end
