@@ -1,6 +1,6 @@
+require_relative 'menu'
 require_relative 'deck'
 require_relative 'user'
-require_relative 'menu'
 
 class Game
   include Menu
@@ -43,7 +43,7 @@ class Game
     when 3
       showdown
     else
-      puts   'Invalid argument!'
+      puts 'Invalid argument!'
       player_turn
     end
   end
@@ -54,23 +54,13 @@ class Game
   end
 
   def showdown
+    show_cards(true)
     if @dealer.score > 21 || (@player.score > @dealer.score && @player.score <= 21)
-      show_cards(true)
-
-      puts 'Great job, soldier! You win!'
-
-      @player.balance += 20
+      player_win
     elsif @player.score > 21 || (@dealer.score > @player.score && @dealer.score <= 21)
-      show_cards(true)
-      puts 'You lose, son!'
-
-      @dealer.balance += 20
+      dealer_win
     elsif @player.score > 21 && @dealer.score > 21 || @player.score == @dealer.score
-      show_cards(true)
-      puts 'It`s a tie!'
-
-      @player.balance += 10
-      @dealer.balance += 10
+      tie
     end
     replay
   end
@@ -93,10 +83,6 @@ class Game
     @dealer.clear_hand
   end
 
-  def show_items(items)
-    items.each_with_index { |item, index| puts "#{index + 1}. #{item}" }
-  end
-
   def show_cards(showdown = false)
     puts "Your cards: #{user_cards(@player.hand)}, score: #{@player.score}, balance: #{@player.balance}"
     if showdown
@@ -106,8 +92,31 @@ class Game
     end
   end
 
+  def player_win
+    puts 'Great job, soldier! You win!'
+
+    @player.balance += 20
+  end
+
+  def dealer_win
+    puts 'You lose, son!'
+
+    @dealer.balance += 20
+  end
+
+  def tie
+    puts 'It`s a tie!'
+
+    @player.balance += 10
+    @dealer.balance += 10
+  end
+
   def user_cards(hand)
     hand.map { |card| card[:card] }.join(',')
+  end
+
+  def show_items(items)
+    items.each_with_index { |item, index| puts "#{index + 1}. #{item}" }
   end
 end
 
